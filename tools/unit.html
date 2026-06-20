@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<title>단위 변환기</title>
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<link rel="stylesheet"
+
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+
+body{
+
+background:#f5f7fa;
+
+padding-top:80px;
+
+transition:.3s;
+
+}
+
+.converter-box{
+
+max-width:700px;
+
+margin:auto;
+
+background:white;
+
+padding:40px;
+
+border-radius:25px;
+
+box-shadow:
+
+0 10px 30px
+
+rgba(0,0,0,.1);
+
+}
+
+.result{
+
+font-size:35px;
+
+font-weight:bold;
+
+text-align:center;
+
+margin-top:30px;
+
+padding:20px;
+
+background:#f8f9fa;
+
+border-radius:20px;
+
+}
+
+.dark{
+
+background:#121212;
+
+color:white;
+
+}
+
+.dark .navbar{
+
+background:#000!important;
+
+}
+
+.dark .converter-box{
+
+background:#1f1f1f;
+
+color:white;
+
+}
+
+.dark .result{
+
+background:#2a2a2a;
+
+color:white;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+
+<div class="container">
+
+<a
+
+class="navbar-brand fw-bold"
+
+href="../index.html">
+
+Online Tools
+
+</a>
+
+
+
+<button
+
+class="navbar-toggler"
+
+data-bs-toggle="collapse"
+
+data-bs-target="#navbar">
+
+<span class="navbar-toggler-icon">
+
+</span>
+
+</button>
+
+
+
+<div
+
+class="collapse navbar-collapse"
+
+id="navbar">
+
+<ul class="navbar-nav me-auto">
+
+<li class="nav-item">
+
+<a
+
+class="nav-link"
+
+href="../index.html">
+
+홈
+
+</a>
+
+</li>
+
+
+
+<li class="nav-item">
+
+<a
+
+class="nav-link"
+
+href="../tools.html">
+
+전체도구
+
+</a>
+
+</li>
+
+
+
+<li class="nav-item">
+
+<a
+
+class="nav-link"
+
+href="../notice.html">
+
+공지사항
+
+</a>
+
+</li>
+
+</ul>
+
+
+
+<button
+
+class="btn btn-light"
+
+id="themeBtn">
+
+🌙
+
+</button>
+
+</div>
+
+</div>
+
+</nav>
+
+
+
+
+
+<div class="container">
+
+<div class="converter-box">
+
+
+<h1 class="text-center mb-4">
+
+<i class="bi bi-rulers"></i>
+
+단위 변환기
+
+</h1>
+
+
+
+
+<div class="mb-3">
+
+<label>
+
+변환 종류
+
+</label>
+
+<select
+
+class="form-select"
+
+id="type">
+
+<option value="length">
+
+길이
+
+</option>
+
+<option value="weight">
+
+무게
+
+</option>
+
+<option value="temperature">
+
+온도
+
+</option>
+
+<option value="time">
+
+시간
+
+</option>
+
+</select>
+
+</div>
+
+
+
+
+<div class="mb-3">
+
+<label>
+
+값
+
+</label>
+
+<input
+
+type="number"
+
+class="form-control"
+
+id="value"
+
+placeholder="숫자 입력">
+
+</div>
+
+
+
+
+<div class="row">
+
+<div class="col">
+
+<select
+
+class="form-select"
+
+id="from">
+
+</select>
+
+</div>
+
+
+<div class="col">
+
+<select
+
+class="form-select"
+
+id="to">
+
+</select>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="text-center mt-4">
+
+<button
+
+class="btn btn-primary"
+
+onclick="convert()">
+
+변환
+
+</button>
+
+</div>
+
+
+
+
+<div
+
+class="result"
+
+id="result">
+
+결과가 여기에 표시됩니다
+
+</div>
+
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<script>
+
+const units={
+
+length:["m","cm","km"],
+
+weight:["kg","g","lb"],
+
+temperature:["℃","℉"],
+
+time:["초","분","시간"]
+
+};
+
+
+
+const from=
+
+document
+
+.getElementById("from");
+
+
+
+const to=
+
+document
+
+.getElementById("to");
+
+
+
+function updateUnits(){
+
+const type=
+
+document
+
+.getElementById("type")
+
+.value;
+
+
+
+from.innerHTML="";
+
+to.innerHTML="";
+
+
+
+units[type]
+
+.forEach(u=>{
+
+from.innerHTML+=
+
+`<option>${u}</option>`;
+
+
+
+to.innerHTML+=
+
+`<option>${u}</option>`;
+
+});
+
+}
+
+
+
+updateUnits();
+
+
+
+document
+
+.getElementById("type")
+
+.onchange=
+
+updateUnits;
+
+
+
+
+
+
+function convert(){
+
+
+const type=
+
+document
+
+.getElementById("type")
+
+.value;
+
+
+
+let value=
+
+parseFloat(
+
+document
+
+.getElementById("value")
+
+.value
+
+);
+
+
+
+const f=
+
+from.value;
+
+
+
+const t=
+
+to.value;
+
+
+
+
+if(isNaN(value)){
+
+alert("숫자를 입력하세요.");
+
+return;
+
+}
+
+
+
+
+
+if(type==="length"){
+
+if(f==="m") value*=1;
+
+if(f==="cm") value/=100;
+
+if(f==="km") value*=1000;
+
+
+
+if(t==="m") value/=1;
+
+if(t==="cm") value*=100;
+
+if(t==="km") value/=1000;
+
+}
+
+
+
+
+
+if(type==="weight"){
+
+if(f==="kg") value*=1;
+
+if(f==="g") value/=1000;
+
+if(f==="lb") value*=0.453592;
+
+
+
+if(t==="kg") value/=1;
+
+if(t==="g") value*=1000;
+
+if(t==="lb") value/=0.453592;
+
+}
+
+
+
+
+
+if(type==="temperature"){
+
+if(f==="℃"&&t==="℉")
+
+value=
+
+(value*9/5)+32;
+
+
+
+else if(
+
+f==="℉"
+
+&&
+
+t==="℃"
+
+)
+
+value=
+
+(value-32)
+
+*5/9;
+
+}
+
+
+
+
+
+if(type==="time"){
+
+if(f==="초") value*=1;
+
+if(f==="분") value*=60;
+
+if(f==="시간") value*=3600;
+
+
+
+if(t==="초") value/=1;
+
+if(t==="분") value/=60;
+
+if(t==="시간") value/=3600;
+
+}
+
+
+
+
+document
+
+.getElementById("result")
+
+.innerHTML=
+
+value.toFixed(4)
+
++
+
+" "
+
++
+
+t;
+
+}
+
+
+
+
+
+
+
+document
+
+.getElementById("themeBtn")
+
+.onclick=()=>{
+
+
+document.body
+
+.classList
+
+.toggle("dark");
+
+
+
+localStorage
+
+.setItem(
+
+"theme",
+
+document.body
+
+.classList
+
+.contains("dark")
+
+?
+
+"dark"
+
+:
+
+"light"
+
+);
+
+};
+
+
+
+
+
+if(
+
+localStorage
+
+.getItem("theme")
+
+==="dark"
+
+){
+
+document.body
+
+.classList
+
+.add("dark");
+
+}
+
+</script>
+
+
+
+
+
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+
+</script>
+
+</body>
+
+</html>
